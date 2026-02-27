@@ -420,6 +420,52 @@
             color: var(--primary-dark);
         }
 
+        .usage-guide {
+            background: linear-gradient(145deg, #FFF8FA, #FFF0F3);
+            border-radius: 16px;
+            padding: 20px 24px;
+            margin-bottom: 24px;
+            border: 1.5px solid #FFE8EC;
+        }
+
+        .usage-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 12px;
+        }
+
+        .usage-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .usage-list li {
+            font-size: 13px;
+            color: var(--text-light);
+            line-height: 1.8;
+            padding-left: 20px;
+            position: relative;
+            margin-bottom: 8px;
+        }
+
+        .usage-list li:last-child {
+            margin-bottom: 0;
+        }
+
+        .usage-list li::before {
+            content: "•";
+            color: var(--primary);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .usage-list li strong {
+            color: var(--primary-dark);
+        }
+
         .generate-btn {
             display: inline-block;
             background: linear-gradient(145deg, var(--primary), var(--primary-light));
@@ -569,6 +615,14 @@
         }
 
         @media (max-width: 480px) {
+            .container {
+                padding: 20px 16px;
+            }
+
+            .welcome-icon {
+                font-size: 60px;
+            }
+
             h1 {
                 font-size: 22px;
             }
@@ -576,18 +630,23 @@
             .subtitle {
                 font-size: 14px;
             }
+
+            .card {
+                padding: 20px;
+                border-radius: 20px;
+            }
             
             .dimensions-grid {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: repeat(3, 1fr);
                 gap: 8px;
             }
             
             .dimension-item {
-                padding: 12px 6px;
+                padding: 12px 4px;
             }
             
             .dimension-icon {
-                font-size: 18px;
+                font-size: 20px;
             }
             
             .dimension-name {
@@ -595,15 +654,15 @@
             }
             
             .info-card {
-                padding: 16px 10px;
+                padding: 14px 8px;
             }
             
             .info-card-icon {
-                font-size: 22px;
+                font-size: 20px;
             }
             
             .info-card-value {
-                font-size: 20px;
+                font-size: 18px;
             }
             
             .info-card-label {
@@ -612,6 +671,55 @@
 
             .login-title {
                 font-size: 18px;
+            }
+
+            .form-input {
+                padding: 14px 16px;
+                font-size: 16px;
+            }
+
+            .login-btn {
+                padding: 14px;
+                font-size: 16px;
+            }
+
+            .generate-btn {
+                width: 100%;
+                padding: 16px 24px;
+                font-size: 16px;
+            }
+
+            .modal-content {
+                padding: 28px 20px;
+            }
+
+            .usage-guide {
+                padding: 16px 20px;
+            }
+
+            .usage-list li {
+                font-size: 12px;
+            }
+        }
+
+        /* 触摸设备优化 */
+        @media (pointer: coarse) {
+            .login-btn:active,
+            .generate-btn:active,
+            .link-btn:active,
+            .logout-btn:active {
+                transform: scale(0.98);
+            }
+        }
+
+        /* 平板适配 */
+        @media (min-width: 481px) and (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            .dimensions-grid {
+                grid-template-columns: repeat(4, 1fr);
             }
         }
     </style>
@@ -712,9 +820,19 @@
             <div class="link-section">
                 <p class="link-title">🔗 生成48小时专属测试链接</p>
                 
+                <!-- 使用说明 -->
+                <div class="usage-guide">
+                    <p class="usage-title">📖 使用说明</p>
+                    <ul class="usage-list">
+                        <li>每个链接<strong>48小时内有效</strong>（从生成时间开始计算）</li>
+                        <li>每个链接<strong>仅限一人使用一次</strong>，测试完成后自动失效</li>
+                        <li>复制链接后，系统会自动生成下一个新链接</li>
+                        <li>不同人请使用不同链接，确保结果准确</li>
+                    </ul>
+                </div>
+                
                 <div id="generate-area">
-                    <p class="link-notice">点击下方按钮生成专属链接<br><strong>每个链接48小时内有效，仅限一人使用一次</strong></p>
-                    <button class="generate-btn" onclick="generateLink()" style="margin-top: 16px;">生成专属测试链接</button>
+                    <button class="generate-btn" onclick="generateLink()">生成专属测试链接</button>
                 </div>
                 
                 <div id="share-area" class="hidden">
@@ -722,7 +840,7 @@
                         <input type="text" class="link-input" id="share-link" readonly>
                         <button class="link-btn" onclick="copyLink()">复制链接</button>
                     </div>
-                    <p class="link-notice"><strong>链接已生成！</strong> 分享给朋友进行测试<br>48小时内有效，仅限一人使用一次</p>
+                    <p class="link-notice"><strong>链接已生成！</strong> 点击复制后分享给朋友<br>复制后将自动生成下一个新链接</p>
                 </div>
             </div>
         </div>
@@ -745,7 +863,7 @@
         };
 
         // 网站基础URL配置
-        const BASE_URL = 'https://git.littlemonster.talent.text.org/code/git';
+        const BASE_URL = 'https://6jw65abtuok5w.ok.kimi.link';
 
         let currentLinkId = null;
 
@@ -816,11 +934,13 @@
             document.getElementById('share-area').classList.add('hidden');
         }
 
-        // 生成链接
+        // 生成链接 - 使用更长的随机ID增加专属性
         function generateLink() {
             const timestamp = Date.now();
-            const random = Math.floor(Math.random() * 10000);
-            const linkId = btoa(`${timestamp}-${random}`).replace(/=/g, '');
+            const randomPart1 = Math.random().toString(36).substring(2, 10);
+            const randomPart2 = Math.random().toString(36).substring(2, 10);
+            const randomPart3 = Math.random().toString(36).substring(2, 6);
+            const linkId = `${randomPart1}${randomPart2}${randomPart3}`;
             
             currentLinkId = linkId;
             
@@ -837,36 +957,46 @@
             document.getElementById('generate-area').classList.add('hidden');
             document.getElementById('share-area').classList.remove('hidden');
             
-            showModal('✅', '链接已生成', '专属测试链接已生成！\n点击复制按钮分享给朋友进行测试');
+            showModal('✅', '专属链接已生成', '专属测试链接已生成！\n\n⚠️ 重要提示：\n• 此链接专属于一位测试者\n• 点击"开始测试"后不可重复使用\n• 请直接复制当前链接分享给测试者');
         }
 
         // 复制链接
         function copyLink() {
             const input = document.getElementById('share-link');
-            input.select();
-            input.setSelectionRange(0, 99999);
+            const linkValue = input.value;
             
-            const copyAction = function() {
+            const doCopy = function() {
                 showModal('📋', '复制成功', '链接已复制到剪贴板！\n\n正在自动生成下一个专属链接...');
                 setTimeout(() => {
                     closeModal();
-                    resetToGenerate();
-                }, 2000);
+                    // 重置并生成新链接
+                    document.getElementById('share-area').classList.add('hidden');
+                    document.getElementById('generate-area').classList.remove('hidden');
+                    generateLink();
+                }, 1500);
             };
             
-            try {
-                navigator.clipboard.writeText(input.value).then(copyAction);
-            } catch (e) {
-                document.execCommand('copy');
-                copyAction();
+            // 尝试使用现代API复制
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(linkValue).then(doCopy).catch(function() {
+                    // 降级方案
+                    fallbackCopy(input, doCopy);
+                });
+            } else {
+                fallbackCopy(input, doCopy);
             }
         }
-
-        // 重置到生成状态
-        function resetToGenerate() {
-            document.getElementById('share-area').classList.add('hidden');
-            document.getElementById('generate-area').classList.remove('hidden');
-            generateLink();
+        
+        // 降级复制方案
+        function fallbackCopy(input, callback) {
+            input.select();
+            input.setSelectionRange(0, 99999);
+            try {
+                document.execCommand('copy');
+                callback();
+            } catch (e) {
+                showModal('❌', '复制失败', '请手动复制链接');
+            }
         }
 
         // 显示弹窗
